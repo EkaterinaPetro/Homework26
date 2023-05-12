@@ -23,11 +23,13 @@ public class IntegerListImplTests {
     }
 
     @Test
-    void add_shouldThrowListIsFullException() {
-        IntegerListImpl list = new IntegerListImpl(1);
+    void add_shouldIncrementArrayIfItsFull() {
+        IntegerListImpl list = new IntegerListImpl(2);
         list.add(777);
-        Assertions.assertThrows(ListIsFullException.class, ()-> list.add(15));
-        Assertions.assertEquals(1, list.size());
+        list.add(15);
+        list.add(37);
+        Assertions.assertEquals(37, list.get(2));
+        Assertions.assertEquals(3, list.size());
     }
 
     @Test
@@ -53,12 +55,12 @@ public class IntegerListImplTests {
     }
 
     @Test
-    void add_withIndexShouldThrowListIsFullException() {
-        IntegerListImpl list = new IntegerListImpl(3);
+    void add_withIndexShouldIncrementArrayIfItsFull() {
+        IntegerListImpl list = new IntegerListImpl(2);
         list.add(777);
         list.add(10);
-        list.add(2);
-        Assertions.assertThrows(ListIsFullException.class, ()-> list.add(2,15));
+        list.add(37);
+        Assertions.assertEquals(37, list.get(2));
         Assertions.assertEquals(3, list.size());
     }
 

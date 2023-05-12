@@ -1,8 +1,10 @@
 package com.homework__26.homework26;
 
+import java.util.Arrays;
+
 public class IntegerListImpl implements IntegerList{
 
-    private final Integer[] integerArr;
+    private Integer[] integerArr;
     private int size = 0;
 
     public IntegerListImpl(int size) {
@@ -18,8 +20,13 @@ public class IntegerListImpl implements IntegerList{
             integerArr[size] = item;
             size++;
             return item;
+        } else {
+            grow();
+            integerArr[size] = item;
+            size++;
+            return item;
         }
-        throw new ListIsFullException();
+        //throw new ListIsFullException();
     }
 
     @Override
@@ -33,7 +40,8 @@ public class IntegerListImpl implements IntegerList{
         }
 
         if (integerArr[integerArr.length - 1] != null) {
-            throw new ListIsFullException();
+            //throw new ListIsFullException();
+            grow();
         }
 
         for (int i = size - 1; i >= index; i--) {
@@ -192,15 +200,38 @@ public class IntegerListImpl implements IntegerList{
     }
 
     private void sort() {
-        for (int i = 1; i < size; i++) {
-            int temp = integerArr[i];
-            int j = i;
-            while (j > 0 && integerArr[j - 1] >= temp) {
-                integerArr[j] = integerArr[j - 1];
-                j--;
-            }
-            integerArr[j] = temp;
+        quickSort(0, size - 1);
+    }
+
+    public void quickSort(int begin, int end) {
+        if (begin < end) {
+            int partitionIndex = partition(begin, end);
+
+            quickSort(begin, partitionIndex - 1);
+            quickSort(partitionIndex + 1, end);
         }
+    }
+
+    private int partition(int begin, int end) {
+        int pivot = integerArr[end];
+        int i = (begin - 1);
+
+        for (int j = begin; j < end; j++) {
+            if (integerArr[j] <= pivot) {
+                i++;
+
+                swapElements(i, j);
+            }
+        }
+
+        swapElements(i + 1, end);
+        return i + 1;
+    }
+
+    private void swapElements(int left, int right) {
+        int temp = integerArr[left];
+        integerArr[left] = integerArr[right];
+        integerArr[right] = temp;
     }
 
     private boolean find(Integer item) {
@@ -221,5 +252,9 @@ public class IntegerListImpl implements IntegerList{
             }
         }
         return false;
+    }
+
+    private void grow() {
+        integerArr = Arrays.copyOf(integerArr, size + size / 2);
     }
 }
